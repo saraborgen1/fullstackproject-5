@@ -17,8 +17,13 @@ export default function Posts() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [comments, setComments] = useState([]);
 
-  const [searchBy, setSearchBy] = useState("title");
-  const [searchValue, setSearchValue] = useState("");
+  const [searchBy, setSearchBy] = useState(
+    localStorage.getItem("postsSearchBy") || "title"
+  );
+
+  const [searchValue, setSearchValue] = useState(
+    localStorage.getItem("postsSearchValue") || ""
+  );
 
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostBody, setNewPostBody] = useState("");
@@ -32,6 +37,8 @@ export default function Posts() {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingCommentBody, setEditingCommentBody] = useState("");
 
+  const [postsLoaded, setPostsLoaded] = useState(false);
+
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -41,9 +48,40 @@ export default function Posts() {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("postsSearchBy", searchBy);
+  }, [searchBy]);
+
+  useEffect(() => {
+    localStorage.setItem("postsSearchValue", searchValue);
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (!postsLoaded) return;
+
+    if (selectedPost) {
+      localStorage.setItem("selectedPostId", selectedPost.id);
+    } else {
+      localStorage.removeItem("selectedPostId");
+    }
+  }, [selectedPost, postsLoaded]);
+
   async function loadPosts() {
     const data = await getPostsByUser(currentUser.id);
     setPosts(data);
+
+    const savedPostId = localStorage.getItem("selectedPostId");
+
+    if (savedPostId) {
+      const savedPost = data.find(
+        (post) => post.id.toString() === savedPostId.toString()
+      );
+
+      if (savedPost) {
+        setSelectedPost(savedPost);
+      }
+    }
+    setPostsLoaded(true);
   }
 
   function getDisplayedPosts() {
@@ -139,8 +177,13 @@ export default function Posts() {
     setEditingPostBody("");
   }
 
-  async function handleShowComments() {
+  async function handleToggleComments() {
     if (!selectedPost) return;
+
+    if (comments.length > 0) {
+      setComments([]);
+      return;
+    }
 
     const data = await getCommentsByPost(selectedPost.id);
     setComments(data);
@@ -201,14 +244,12 @@ export default function Posts() {
     setEditingCommentBody("");
   }
 
-  if (!currentUser) {
-    return (
-      <div>
-        <h1>Please login first</h1>
-        <button onClick={() => navigate("/login")}>Go to Login</button>
-      </div>
-    );
+  function handleClosePost() {
+    setSelectedPost(null);
+    setComments([]);
   }
+
+
 
   return (
     <PostsView
@@ -233,20 +274,28 @@ export default function Posts() {
       editingCommentId={editingCommentId}
       editingCommentBody={editingCommentBody}
       setEditingCommentBody={setEditingCommentBody}
-      onBackHome={() => navigate("/home")}
+      onBackHome={() => {
+        localStorage.removeItem("postsSearchBy");
+        localStorage.removeItem("postsSearchValue");
+        localStorage.removeItem("selectedPostId");
+        navigate("/home");
+      }}
       onAddPost={handleAddPost}
       onDeletePost={handleDeletePost}
       onSelectPost={handleSelectPost}
       onStartEditPost={handleStartEditPost}
       onSaveEditPost={handleSaveEditPost}
       onCancelEditPost={handleCancelEditPost}
-      onShowComments={handleShowComments}
+      onShowComments={handleToggleComments}
       onAddComment={handleAddComment}
       onDeleteComment={handleDeleteComment}
       onStartEditComment={handleStartEditComment}
       onSaveEditComment={handleSaveEditComment}
       onCancelEditComment={handleCancelEditComment}
       currentUser={currentUser}
+      onClosePost={handleClosePost}
+      isLoggedIn={!!currentUser}
+      onGoLogin={() => navigate("/login")}
     />
   );
 }

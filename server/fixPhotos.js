@@ -4,8 +4,8 @@ const db = JSON.parse(fs.readFileSync("db.json", "utf-8"));
 
 db.photos = db.photos.map((photo) => ({
   ...photo,
-  url: `https://picsum.photos/600/400?random=${photo.id}`,
-  thumbnailUrl: `https://picsum.photos/150/150?random=${photo.id}`
+  url: `https://picsum.photos/seed/photo-${photo.id}/600/400`,
+  thumbnailUrl: `https://picsum.photos/seed/photo-${photo.id}/150/150`
 }));
 
 fs.writeFileSync("db.json", JSON.stringify(db, null, 2));

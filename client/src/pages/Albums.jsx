@@ -18,8 +18,13 @@ export default function Albums() {
     const [photos, setPhotos] = useState([]);
     const [photoPage, setPhotoPage] = useState(1);
 
-    const [searchBy, setSearchBy] = useState("title");
-    const [searchValue, setSearchValue] = useState("");
+    const [searchBy, setSearchBy] = useState(
+        localStorage.getItem("albumsSearchBy") || "title"
+    );
+
+    const [searchValue, setSearchValue] = useState(
+        localStorage.getItem("albumsSearchValue") || ""
+    );
 
     const [newAlbumTitle, setNewAlbumTitle] = useState("");
 
@@ -36,15 +41,57 @@ export default function Albums() {
     const navigate = useNavigate();
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
+    const [albumsLoaded, setAlbumsLoaded] = useState(false);
+
     useEffect(() => {
         if (currentUser) {
             loadAlbums();
         }
     }, []);
 
+    useEffect(() => {
+        localStorage.setItem("albumsSearchBy", searchBy);
+    }, [searchBy]);
+
+    useEffect(() => {
+        localStorage.setItem("albumsSearchValue", searchValue);
+    }, [searchValue]);
+
+    useEffect(() => {
+        if (!albumsLoaded) return;
+
+        if (selectedAlbum) {
+            localStorage.setItem("selectedAlbumId", selectedAlbum.id);
+        } else {
+            localStorage.removeItem("selectedAlbumId");
+        }
+    }, [selectedAlbum, albumsLoaded]);
+
+    useEffect(() => {
+        if (selectedAlbum) {
+            localStorage.setItem("albumsPhotoPage", photoPage);
+        }
+    }, [photoPage, selectedAlbum]);
+
     async function loadAlbums() {
         const data = await getAlbumsByUser(currentUser.id);
         setAlbums(data);
+
+        const savedAlbumId = localStorage.getItem("selectedAlbumId");
+
+        if (savedAlbumId) {
+            const savedAlbum = data.find(
+                (album) => album.id.toString() === savedAlbumId.toString()
+            );
+
+            if (savedAlbum) {
+                const savedPage = Number(localStorage.getItem("albumsPhotoPage")) || 1;
+
+                await handleSelectAlbum(savedAlbum, true, savedPage);
+            }
+        }
+
+        setAlbumsLoaded(true);
     }
 
     function getDisplayedAlbums() {
@@ -88,15 +135,32 @@ export default function Albums() {
         setNewAlbumTitle("");
     }
 
-    async function handleSelectAlbum(album) {
+    async function handleSelectAlbum(album, fromRefresh = false, savedPage = 1) {
+        if (!fromRefresh && selectedAlbum?.id === album.id) {
+            setSelectedAlbum(null);
+            setPhotos([]);
+            setHasMorePhotos(false);
+            return;
+        }
+
         setSelectedAlbum(album);
         setPhotos([]);
-        setPhotoPage(1);
 
-        const firstPhotos = await getPhotosByAlbumPaged(album.id, 1, PHOTO_LIMIT);
+        let allPhotos = [];
 
-        setPhotos(firstPhotos);
-        setHasMorePhotos(firstPhotos.length === PHOTO_LIMIT);
+        for (let page = 1; page <= savedPage; page++) {
+            const pagePhotos = await getPhotosByAlbumPaged(
+                album.id,
+                page,
+                PHOTO_LIMIT
+            );
+
+            allPhotos = [...allPhotos, ...pagePhotos];
+        }
+
+        setPhotos(allPhotos);
+        setPhotoPage(savedPage);
+        setHasMorePhotos(allPhotos.length % PHOTO_LIMIT === 0);
     }
 
     async function handleLoadMorePhotos() {
@@ -205,7 +269,13 @@ export default function Albums() {
             editingPhotoUrl={editingPhotoUrl}
             setEditingPhotoUrl={setEditingPhotoUrl}
             hasMorePhotos={hasMorePhotos}
-            onBackHome={() => navigate("/home")}
+            onBackHome={() => {
+                localStorage.removeItem("albumsSearchBy");
+                localStorage.removeItem("albumsSearchValue");
+                localStorage.removeItem("selectedAlbumId");
+                localStorage.removeItem("albumsPhotoPage");
+                navigate("/home");
+            }}
             onSelectAlbum={handleSelectAlbum}
             onAddAlbum={handleAddAlbum}
             onLoadMorePhotos={handleLoadMorePhotos}

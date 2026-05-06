@@ -12,9 +12,17 @@ export default function Todos() {
   const [todos, setTodos] = useState([]);
   const [newTitle, setNewTitle] = useState("");
 
-  const [sortBy, setSortBy] = useState("id");
-  const [searchBy, setSearchBy] = useState("title");
-  const [searchValue, setSearchValue] = useState("");
+  const [sortBy, setSortBy] = useState(
+    localStorage.getItem("todosSortBy") || "id"
+  );
+
+  const [searchBy, setSearchBy] = useState(
+    localStorage.getItem("todosSearchBy") || "title"
+  );
+
+  const [searchValue, setSearchValue] = useState(
+    localStorage.getItem("todosSearchValue") || ""
+  );
 
   const [editingId, setEditingId] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
@@ -27,6 +35,18 @@ export default function Todos() {
       loadTodos();
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todosSortBy", sortBy);
+  }, [sortBy]);
+
+  useEffect(() => {
+    localStorage.setItem("todosSearchBy", searchBy);
+  }, [searchBy]);
+
+  useEffect(() => {
+    localStorage.setItem("todosSearchValue", searchValue);
+  }, [searchValue]);
 
   async function loadTodos() {
     const data = await getTodosByUser(currentUser.id);
@@ -159,7 +179,12 @@ export default function Todos() {
       onStartEdit={handleStartEdit}
       onSaveEdit={handleSaveEdit}
       onCancelEdit={handleCancelEdit}
-      onBackHome={() => navigate("/home")}
+      onBackHome={() => {
+        localStorage.removeItem("todosSortBy");
+        localStorage.removeItem("todosSearchBy");
+        localStorage.removeItem("todosSearchValue");
+        navigate("/home");
+      }}
     />
   );
 }

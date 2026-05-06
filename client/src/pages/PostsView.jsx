@@ -38,9 +38,20 @@ export default function PostsView({
   onStartEditComment,
   onSaveEditComment,
   onCancelEditComment,
+  onClosePost,
 
+  isLoggedIn,
+  onGoLogin,
   currentUser
 }) {
+  if (!isLoggedIn) {
+    return (
+      <div>
+        <h1>Please login first</h1>
+        <button onClick={onGoLogin}>Go to Login</button>
+      </div>
+    );
+  }
   return (
     <div>
       <button onClick={onBackHome}>Back to Home</button>
@@ -127,7 +138,10 @@ export default function PostsView({
           <h3>{selectedPost.title}</h3>
           <p>{selectedPost.body}</p>
 
-          <button onClick={onShowComments}>Show Comments</button>
+          <button onClick={onShowComments}>
+            {comments.length > 0 ? "Hide Comments" : "Show Comments"}
+          </button>
+          <button onClick={onClosePost}>Close Post</button>
 
           <h3>Comments</h3>
 
@@ -140,7 +154,7 @@ export default function PostsView({
           <button onClick={onAddComment}>Add Comment</button>
 
           {comments.length === 0 ? (
-            <p>No comments loaded.</p>
+            <p>Click "Show Comments" to load comments.</p>
           ) : (
             <ul>
               {comments.map((comment) => (
