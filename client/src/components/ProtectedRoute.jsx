@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (userId && Number(userId) !== currentUser.id) {
+  if (userId && userId.toString() !== currentUser.id?.toString()) {
     return <Navigate to="/home" replace />;
   }
 

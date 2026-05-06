@@ -359,3 +359,8 @@ export async function addUser(user) {
 
   return response.json();
 }
+
+export async function getAllPosts() {
+  const response = await fetch(`${BASE_URL}/posts`);
+  return response.json();
+}

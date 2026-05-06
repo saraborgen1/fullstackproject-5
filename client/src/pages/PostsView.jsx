@@ -123,8 +123,12 @@ export default function PostsView({
                   <br />
 
                   <button onClick={() => onSelectPost(post)}>Select</button>
-                  <button onClick={() => onStartEditPost(post)}>Edit</button>
-                  <button onClick={() => onDeletePost(post.id)}>Delete</button>
+                  {post.userId?.toString() === currentUser.id?.toString() && (
+                    <>
+                      <button onClick={() => onStartEditPost(post)}>Edit</button>
+                      <button onClick={() => onDeletePost(post.id)}>Delete</button>
+                    </>
+                  )}
                 </>
               )}
             </li>

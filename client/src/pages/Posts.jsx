@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  getPostsByUser,
+  getAllPosts,
   addPost,
   deletePost,
   updatePost,
@@ -43,7 +43,7 @@ export default function Posts() {
   const { userId, postId } = useParams();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  if (userId && Number(userId) !== currentUser?.id) {
+  if (userId && userId.toString() !== currentUser?.id?.toString()) {
     navigate("/home");
     return null;
   }
@@ -73,7 +73,7 @@ export default function Posts() {
   }, [selectedPost, postsLoaded]);
 
   async function loadPosts() {
-    const data = await getPostsByUser(currentUser.id);
+    const data = await getAllPosts();
     setPosts(data);
 
     const savedPostId = postId || localStorage.getItem("selectedPostId");
@@ -106,6 +106,12 @@ export default function Posts() {
         return true;
       });
     }
+
+    result.sort((a, b) => {
+      if (a.userId === currentUser.id && b.userId !== currentUser.id) return -1;
+      if (a.userId !== currentUser.id && b.userId === currentUser.id) return 1;
+      return a.id - b.id;
+    });
 
     return result;
   }
