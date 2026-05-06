@@ -28,6 +28,12 @@ export default function Todos() {
   const [editingTitle, setEditingTitle] = useState("");
 
   const navigate = useNavigate();
+  const { userId } = useParams();
+
+  if (userId && Number(userId) !== currentUser?.id) {
+    navigate("/home");
+    return null;
+  }
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {

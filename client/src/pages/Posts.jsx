@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getPostsByUser,
   addPost,
@@ -40,7 +40,13 @@ export default function Posts() {
   const [postsLoaded, setPostsLoaded] = useState(false);
 
   const navigate = useNavigate();
+  const { userId, postId } = useParams();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (userId && Number(userId) !== currentUser?.id) {
+    navigate("/home");
+    return null;
+  }
 
   useEffect(() => {
     if (currentUser) {
@@ -70,7 +76,7 @@ export default function Posts() {
     const data = await getPostsByUser(currentUser.id);
     setPosts(data);
 
-    const savedPostId = localStorage.getItem("selectedPostId");
+    const savedPostId = postId || localStorage.getItem("selectedPostId");
 
     if (savedPostId) {
       const savedPost = data.find(
@@ -141,6 +147,7 @@ export default function Posts() {
   function handleSelectPost(post) {
     setSelectedPost(post);
     setComments([]);
+    navigate(`/users/${currentUser.id}/posts/${post.id}/comments`);
   }
 
   function handleStartEditPost(post) {
@@ -247,9 +254,8 @@ export default function Posts() {
   function handleClosePost() {
     setSelectedPost(null);
     setComments([]);
+    navigate("/posts");
   }
-
-
 
   return (
     <PostsView

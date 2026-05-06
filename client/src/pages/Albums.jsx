@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     getAlbumsByUser,
     addAlbum,
@@ -39,6 +39,13 @@ export default function Albums() {
     const [hasMorePhotos, setHasMorePhotos] = useState(false);
 
     const navigate = useNavigate();
+    const { userId, albumId } = useParams();
+
+    if (userId && Number(userId) !== currentUser?.id) {
+        navigate("/home");
+        return null;
+    }
+
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     const [albumsLoaded, setAlbumsLoaded] = useState(false);
@@ -77,7 +84,7 @@ export default function Albums() {
         const data = await getAlbumsByUser(currentUser.id);
         setAlbums(data);
 
-        const savedAlbumId = localStorage.getItem("selectedAlbumId");
+        const savedAlbumId = albumId || localStorage.getItem("selectedAlbumId");
 
         if (savedAlbumId) {
             const savedAlbum = data.find(
@@ -140,10 +147,12 @@ export default function Albums() {
             setSelectedAlbum(null);
             setPhotos([]);
             setHasMorePhotos(false);
+            navigate("/albums");
             return;
         }
 
         setSelectedAlbum(album);
+        navigate(`/users/${currentUser.id}/albums/${album.id}/photos`);
         setPhotos([]);
 
         let allPhotos = [];
