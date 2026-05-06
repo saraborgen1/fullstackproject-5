@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getTodosByUser,
   addTodo,
@@ -30,11 +30,12 @@ export default function Todos() {
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  if (userId && Number(userId) !== currentUser?.id) {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (userId && userId.toString() !== currentUser?.id?.toString()) {
     navigate("/home");
     return null;
   }
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   useEffect(() => {
     if (currentUser) {
@@ -63,6 +64,7 @@ export default function Todos() {
     if (!newTitle.trim()) return;
 
     const newTodo = {
+      id: Date.now(),
       userId: currentUser.id,
       title: newTitle,
       completed: false

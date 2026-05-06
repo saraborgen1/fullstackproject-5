@@ -113,14 +113,8 @@ export default function Posts() {
   async function handleAddPost() {
     if (!newPostTitle.trim() || !newPostBody.trim()) return;
 
-    const numericIds = posts
-      .map((post) => Number(post.id))
-      .filter((id) => !isNaN(id));
-
-    const maxId = numericIds.length > 0 ? Math.max(...numericIds) : 0;
-
     const newPost = {
-      id: maxId + 1,
+      id: Date.now(),
       userId: currentUser.id,
       title: newPostTitle,
       body: newPostBody
@@ -199,14 +193,8 @@ export default function Posts() {
   async function handleAddComment() {
     if (!selectedPost || !newCommentBody.trim()) return;
 
-    const numericIds = comments
-      .map((comment) => Number(comment.id))
-      .filter((id) => !isNaN(id));
-
-    const maxId = numericIds.length > 0 ? Math.max(...numericIds) : 0;
-
     const newComment = {
-      id: maxId + 1,
+      id: Date.now(),
       postId: selectedPost.id,
       userId: currentUser.id,
       name: currentUser.name,

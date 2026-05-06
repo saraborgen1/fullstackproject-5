@@ -49,16 +49,8 @@ export default function Register() {
       return;
     }
 
-    const users = await getUsers();
-
-    const numericIds = users
-      .map((user) => Number(user.id))
-      .filter((id) => !isNaN(id));
-
-    const maxId = numericIds.length > 0 ? Math.max(...numericIds) : 0;
-
     const newUser = {
-      id: maxId + 1,
+      id: Date.now(),
       name,
       username,
       website,

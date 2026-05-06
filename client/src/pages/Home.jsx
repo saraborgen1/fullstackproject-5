@@ -19,7 +19,7 @@ export default function Home() {
       showInfo={showInfo}
       onShowInfo={() => setShowInfo(true)}
       onCloseInfo={() => setShowInfo(false)}
-      onGoTodos={() => navigate(`/users/${currentUser.id}/todos`)}
+      onGoTodos={() => navigate("/todos")}
       onGoPosts={() => navigate("/posts")}
       onGoAlbums={() => navigate("/albums")}
       onLogout={handleLogout}

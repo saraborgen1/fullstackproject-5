@@ -40,13 +40,12 @@ export default function Albums() {
 
     const navigate = useNavigate();
     const { userId, albumId } = useParams();
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     if (userId && Number(userId) !== currentUser?.id) {
         navigate("/home");
         return null;
     }
-
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     const [albumsLoaded, setAlbumsLoaded] = useState(false);
 
@@ -124,14 +123,8 @@ export default function Albums() {
     async function handleAddAlbum() {
         if (!newAlbumTitle.trim()) return;
 
-        const numericIds = albums
-            .map((album) => Number(album.id))
-            .filter((id) => !isNaN(id));
-
-        const maxId = numericIds.length > 0 ? Math.max(...numericIds) : 0;
-
         const newAlbum = {
-            id: maxId + 1,
+            id: Date.now(),
             userId: currentUser.id,
             title: newAlbumTitle
         };
@@ -191,14 +184,8 @@ export default function Albums() {
     async function handleAddPhoto() {
         if (!selectedAlbum || !newPhotoTitle.trim() || !newPhotoUrl.trim()) return;
 
-        const numericIds = photos
-            .map((photo) => Number(photo.id))
-            .filter((id) => !isNaN(id));
-
-        const maxId = numericIds.length > 0 ? Math.max(...numericIds) : 0;
-
         const newPhoto = {
-            id: maxId + 1,
+            id: Date.now(),
             albumId: selectedAlbum.id,
             title: newPhotoTitle,
             url: newPhotoUrl,
