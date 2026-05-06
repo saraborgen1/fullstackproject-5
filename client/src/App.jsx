@@ -5,17 +5,51 @@ import Home from "./pages/Home";
 import Todos from "./pages/Todos";
 import Posts from "./pages/Posts";
 import Albums from "./pages/Albums";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/todos" element={<Todos />} />
-        <Route path="/posts" element={<Posts />} />
-        <Route path="/albums" element={<Albums />} />
+
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/todos"
+          element={
+            <ProtectedRoute>
+              <Todos />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/posts"
+          element={
+            <ProtectedRoute>
+              <Posts />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/albums"
+          element={
+            <ProtectedRoute>
+              <Albums />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
