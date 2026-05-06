@@ -9,17 +9,8 @@ export default function Home() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   function handleLogout() {
-    localStorage.removeItem("currentUser");
+    localStorage.clear();
     navigate("/login");
-  }
-
-  if (!currentUser) {
-    return (
-      <div>
-        <h1>No user logged in</h1>
-        <button onClick={() => navigate("/login")}>Go to Login</button>
-      </div>
-    );
   }
 
   return (
@@ -32,6 +23,8 @@ export default function Home() {
       onGoPosts={() => navigate("/posts")}
       onGoAlbums={() => navigate("/albums")}
       onLogout={handleLogout}
+      isLoggedIn={!!currentUser}
+      onGoLogin={() => navigate("/login")}
     />
   );
 }

@@ -150,15 +150,6 @@ export default function Todos() {
     return result;
   }
 
-  if (!currentUser) {
-    return (
-      <div>
-        <h1>Please login first</h1>
-        <button onClick={() => navigate("/login")}>Go to Login</button>
-      </div>
-    );
-  }
-
   return (
     <TodosView
       newTitle={newTitle}
@@ -185,6 +176,8 @@ export default function Todos() {
         localStorage.removeItem("todosSearchValue");
         navigate("/home");
       }}
+      isLoggedIn={!!currentUser}
+      onGoLogin={() => navigate("/login")}
     />
   );
 }

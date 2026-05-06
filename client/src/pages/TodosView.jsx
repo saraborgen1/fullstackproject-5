@@ -17,8 +17,19 @@ export default function TodosView({
     onStartEdit,
     onSaveEdit,
     onCancelEdit,
+    isLoggedIn,
+    onGoLogin,
     onBackHome
 }) {
+    if (!isLoggedIn) {
+        return (
+            <div>
+                <h1>Please login first</h1>
+                <button onClick={onGoLogin}>Go to Login</button>
+            </div>
+        );
+    }
+
     return (
         <div>
             <button onClick={onBackHome}>Back to Home</button>

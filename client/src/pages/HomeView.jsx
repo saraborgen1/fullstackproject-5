@@ -6,8 +6,18 @@ export default function HomeView({
   onGoTodos,
   onGoPosts,
   onGoAlbums,
+  isLoggedIn,
+  onGoLogin,
   onLogout
 }) {
+  if (!isLoggedIn) {
+    return (
+      <div>
+        <h1>No user logged in</h1>
+        <button onClick={onGoLogin}>Go to Login</button>
+      </div>
+    );
+  }
   return (
     <div>
       <h1>Welcome, {currentUser.name}</h1>

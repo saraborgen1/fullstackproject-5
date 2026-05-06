@@ -31,8 +31,19 @@ export default function AlbumsView({
     onDeletePhoto,
     onStartEditPhoto,
     onSaveEditPhoto,
-    onCancelEditPhoto
+    onCancelEditPhoto,
+
+    isLoggedIn,
+    onGoLogin
 }) {
+    if (!isLoggedIn) {
+        return (
+            <div>
+                <h1>Please login first</h1>
+                <button onClick={onGoLogin}>Go to Login</button>
+            </div>
+        );
+    }
     return (
         <div>
             <button onClick={onBackHome}>Back to Home</button>

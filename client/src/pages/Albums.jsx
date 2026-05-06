@@ -239,14 +239,7 @@ export default function Albums() {
         setEditingPhotoUrl("");
     }
 
-    if (!currentUser) {
-        return (
-            <div>
-                <h1>Please login first</h1>
-                <button onClick={() => navigate("/login")}>Go to Login</button>
-            </div>
-        );
-    }
+
 
     return (
         <AlbumsView
@@ -284,6 +277,8 @@ export default function Albums() {
             onStartEditPhoto={handleStartEditPhoto}
             onSaveEditPhoto={handleSaveEditPhoto}
             onCancelEditPhoto={handleCancelEditPhoto}
+            isLoggedIn={!!currentUser}
+            onGoLogin={() => navigate("/login")}
         />
     );
 }
