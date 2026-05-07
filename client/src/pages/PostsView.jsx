@@ -131,96 +131,96 @@ export default function PostsView({
           </Typography>
         </Paper>
 
-<Box
-  sx={{
-    display: "grid",
-    gridTemplateColumns: {
-      xs: "1fr",
-      md: "4fr 2fr",
-    },
-    gap: 3,
-    marginBottom: 4,
-    alignItems: "stretch",
-  }}
->
-  <Card sx={{ borderRadius: 4 }}>
-    <CardContent>
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        Add new post
-      </Typography>
-
-      <Stack spacing={2}>
-        <TextField
-          label="Post title"
-          fullWidth
-          value={newPostTitle}
-          onChange={(e) => setNewPostTitle(e.target.value)}
-        />
-
-        <TextField
-          label="Post body"
-          multiline
-          rows={4}
-          fullWidth
-          value={newPostBody}
-          onChange={(e) => setNewPostBody(e.target.value)}
-        />
-
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onAddPost}
+        <Box
           sx={{
-            borderRadius: 3,
-            alignSelf: "flex-start",
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "4fr 2fr",
+            },
+            gap: 3,
+            marginBottom: 4,
+            alignItems: "stretch",
           }}
         >
-          Add Post
-        </Button>
-      </Stack>
-    </CardContent>
-  </Card>
+          <Card sx={{ borderRadius: 4 }}>
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Add new post
+              </Typography>
 
-  <Card sx={{ borderRadius: 4 }}>
-    <CardContent>
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        Search posts
-      </Typography>
+              <Stack spacing={2}>
+                <TextField
+                  label="Post title"
+                  fullWidth
+                  value={newPostTitle}
+                  onChange={(e) => setNewPostTitle(e.target.value)}
+                />
 
-      <Stack spacing={2}>
-        <FormControl fullWidth>
-          <InputLabel>Search by</InputLabel>
+                <TextField
+                  label="Post body"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  value={newPostBody}
+                  onChange={(e) => setNewPostBody(e.target.value)}
+                />
 
-          <Select
-            value={searchBy}
-            label="Search by"
-            onChange={(e) => setSearchBy(e.target.value)}
-          >
-            <MenuItem value="id">Search by ID</MenuItem>
-            <MenuItem value="title">Search by Title</MenuItem>
-          </Select>
-        </FormControl>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={onAddPost}
+                  sx={{
+                    borderRadius: 3,
+                    alignSelf: "flex-start",
+                  }}
+                >
+                  Add Post
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
 
-        <TextField
-          label="Search"
-          fullWidth
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+          <Card sx={{ borderRadius: 4 }}>
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Search posts
+              </Typography>
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={showOnlyMyPosts}
-              onChange={(e) => setShowOnlyMyPosts(e.target.checked)}
-            />
-          }
-          label="Show only my posts"
-        />
-      </Stack>
-    </CardContent>
-  </Card>
-</Box>
+              <Stack spacing={2}>
+                <FormControl fullWidth>
+                  <InputLabel>Search by</InputLabel>
+
+                  <Select
+                    value={searchBy}
+                    label="Search by"
+                    onChange={(e) => setSearchBy(e.target.value)}
+                  >
+                    <MenuItem value="id">Search by ID</MenuItem>
+                    <MenuItem value="title">Search by Title</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <TextField
+                  label="Search"
+                  fullWidth
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={showOnlyMyPosts}
+                      onChange={(e) => setShowOnlyMyPosts(e.target.checked)}
+                    />
+                  }
+                  label="Show only my posts"
+                />
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
 
         <Stack spacing={2}>
           {posts.length === 0 ? (
@@ -283,9 +283,11 @@ export default function PostsView({
                     <>
                       <Stack
                         direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        marginBottom={2}
+                        sx={{
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: 2,
+                        }}
                       >
                         <Chip
                           label={`ID: ${post.id}`}
@@ -295,22 +297,22 @@ export default function PostsView({
 
                         {post.userId?.toString() ===
                           currentUser.id?.toString() && (
-                          <Box>
-                            <IconButton
-                              color="primary"
-                              onClick={() => onStartEditPost(post)}
-                            >
-                              <EditIcon />
-                            </IconButton>
+                            <Box>
+                              <IconButton
+                                color="primary"
+                                onClick={() => onStartEditPost(post)}
+                              >
+                                <EditIcon />
+                              </IconButton>
 
-                            <IconButton
-                              color="error"
-                              onClick={() => onDeletePost(post.id)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Box>
-                        )}
+                              <IconButton
+                                color="error"
+                                onClick={() => onDeletePost(post.id)}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Box>
+                          )}
                       </Stack>
 
                       <Typography
@@ -351,9 +353,11 @@ export default function PostsView({
             <CardContent>
               <Stack
                 direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                marginBottom={2}
+                sx={{
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 2,
+                }}
               >
                 <Typography variant="h5" fontWeight="bold">
                   Selected Post
@@ -372,7 +376,7 @@ export default function PostsView({
                 {selectedPost.title}
               </Typography>
 
-              <Typography color="text.secondary" marginBottom={3}>
+              <Typography color="text.secondary" sx={{ marginBottom: 3 }}>
                 {selectedPost.body}
               </Typography>
 
@@ -393,7 +397,7 @@ export default function PostsView({
                 Add Comment
               </Typography>
 
-              <Stack spacing={2} marginBottom={4}>
+              <Stack spacing={2} sx={{ marginBottom: 4 }}>
                 <TextField
                   label="Add comment"
                   multiline
@@ -464,7 +468,7 @@ export default function PostsView({
                           </Stack>
                         ) : (
                           <>
-                            <Typography marginBottom={2}>
+                            <Typography sx={{ marginBottom: 2 }}>
                               {comment.body}
                             </Typography>
 

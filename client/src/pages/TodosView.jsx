@@ -106,89 +106,89 @@ export default function TodosView({
           </Typography>
         </Paper>
 
-<Box
-  sx={{
-    display: "grid",
-    gridTemplateColumns: {
-      xs: "1fr",
-      md: "4fr 2fr",
-    },
-    gap: 3,
-    marginBottom: 4,
-    alignItems: "stretch",
-  }}
->
-  <Card sx={{ borderRadius: 4 }}>
-    <CardContent>
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        Add new todo
-      </Typography>
-
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-        <TextField
-          label="New todo title"
-          fullWidth
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-        />
-
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onAdd}
-          sx={{ borderRadius: 3, minWidth: 120 }}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "4fr 2fr",
+            },
+            gap: 3,
+            marginBottom: 4,
+            alignItems: "stretch",
+          }}
         >
-          Add
-        </Button>
-      </Stack>
-    </CardContent>
-  </Card>
+          <Card sx={{ borderRadius: 4 }}>
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Add new todo
+              </Typography>
 
-  <Card sx={{ borderRadius: 4 }}>
-    <CardContent>
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
-        Filters
-      </Typography>
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                <TextField
+                  label="New todo title"
+                  fullWidth
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                />
 
-      <Stack spacing={2}>
-        <FormControl fullWidth>
-          <InputLabel>Sort todos</InputLabel>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={onAdd}
+                  sx={{ borderRadius: 3, minWidth: 120 }}
+                >
+                  Add
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
 
-          <Select
-            value={sortBy}
-            label="Sort todos"
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <MenuItem value="id">Sort by ID</MenuItem>
-            <MenuItem value="title">Sort by Title</MenuItem>
-            <MenuItem value="completed">Sort by Completed</MenuItem>
-          </Select>
-        </FormControl>
+          <Card sx={{ borderRadius: 4 }}>
+            <CardContent>
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Filters
+              </Typography>
 
-        <FormControl fullWidth>
-          <InputLabel>Search by</InputLabel>
+              <Stack spacing={2}>
+                <FormControl fullWidth>
+                  <InputLabel>Sort todos</InputLabel>
 
-          <Select
-            value={searchBy}
-            label="Search by"
-            onChange={(e) => setSearchBy(e.target.value)}
-          >
-            <MenuItem value="id">Search by ID</MenuItem>
-            <MenuItem value="title">Search by Title</MenuItem>
-            <MenuItem value="completed">Search by Completed</MenuItem>
-          </Select>
-        </FormControl>
+                  <Select
+                    value={sortBy}
+                    label="Sort todos"
+                    onChange={(e) => setSortBy(e.target.value)}
+                  >
+                    <MenuItem value="id">Sort by ID</MenuItem>
+                    <MenuItem value="title">Sort by Title</MenuItem>
+                    <MenuItem value="completed">Sort by Completed</MenuItem>
+                  </Select>
+                </FormControl>
 
-        <TextField
-          label="Search"
-          fullWidth
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-      </Stack>
-    </CardContent>
-  </Card>
-</Box>
+                <FormControl fullWidth>
+                  <InputLabel>Search by</InputLabel>
+
+                  <Select
+                    value={searchBy}
+                    label="Search by"
+                    onChange={(e) => setSearchBy(e.target.value)}
+                  >
+                    <MenuItem value="id">Search by ID</MenuItem>
+                    <MenuItem value="title">Search by Title</MenuItem>
+                    <MenuItem value="completed">Search by Completed</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <TextField
+                  label="Search"
+                  fullWidth
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                />
+              </Stack>
+            </CardContent>
+          </Card>
+        </Box>
 
         <Card sx={{ borderRadius: 4 }}>
           <CardContent>
@@ -254,32 +254,26 @@ export default function TodosView({
                         onChange={(e) => setEditingTitle(e.target.value)}
                       />
                     ) : (
-                      <ListItemText
-                        primary={
-                          <Typography
-                            sx={{
-                              textDecoration: todo.completed
-                                ? "line-through"
-                                : "none",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {todo.title}
-                          </Typography>
-                        }
-                        secondary={
-                          <Stack direction="row" spacing={1} sx={{ marginTop: 1 }}>
-                            <Chip label={`ID: ${todo.id}`} size="small" />
-                            <Chip
-                              label={
-                                todo.completed ? "Completed" : "Not completed"
-                              }
-                              size="small"
-                              color={todo.completed ? "success" : "default"}
-                            />
-                          </Stack>
-                        }
-                      />
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Typography
+                          sx={{
+                            textDecoration: todo.completed ? "line-through" : "none",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {todo.title}
+                        </Typography>
+
+                        <Stack direction="row" spacing={1} sx={{ marginTop: 1 }}>
+                          <Chip label={`ID: ${todo.id}`} size="small" />
+
+                          <Chip
+                            label={todo.completed ? "Completed" : "Not completed"}
+                            size="small"
+                            color={todo.completed ? "success" : "default"}
+                          />
+                        </Stack>
+                      </Box>
                     )}
                   </ListItem>
                 ))}
