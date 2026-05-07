@@ -25,6 +25,7 @@ export default function Posts() {
     localStorage.getItem("postsSearchValue") || ""
   );
 
+  const [showOnlyMyPosts, setShowOnlyMyPosts] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostBody, setNewPostBody] = useState("");
 
@@ -92,6 +93,12 @@ export default function Posts() {
 
   function getDisplayedPosts() {
     let result = [...posts];
+
+    if (showOnlyMyPosts) {
+  result = result.filter(
+    (post) => post.userId?.toString() === currentUser.id?.toString()
+  );
+}
 
     if (searchValue.trim()) {
       result = result.filter((post) => {
@@ -260,6 +267,8 @@ export default function Posts() {
       setSearchBy={setSearchBy}
       searchValue={searchValue}
       setSearchValue={setSearchValue}
+      showOnlyMyPosts={showOnlyMyPosts}
+      setShowOnlyMyPosts={setShowOnlyMyPosts}
       newPostTitle={newPostTitle}
       setNewPostTitle={setNewPostTitle}
       newPostBody={newPostBody}

@@ -1,3 +1,33 @@
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Stack,
+  Paper,
+  Alert,
+  Chip,
+  Divider,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
+import CloseIcon from "@mui/icons-material/Close";
+import CommentIcon from "@mui/icons-material/Comment";
+
 export default function PostsView({
   posts,
   selectedPost,
@@ -6,6 +36,9 @@ export default function PostsView({
   setSearchBy,
   searchValue,
   setSearchValue,
+
+  showOnlyMyPosts,
+  setShowOnlyMyPosts,
 
   newPostTitle,
   setNewPostTitle,
@@ -42,165 +75,428 @@ export default function PostsView({
 
   isLoggedIn,
   onGoLogin,
-  currentUser
+  currentUser,
 }) {
   if (!isLoggedIn) {
     return (
-      <div>
-        <h1>Please login first</h1>
-        <button onClick={onGoLogin}>Go to Login</button>
-      </div>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          background: "#0f172a",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Card sx={{ padding: 4, borderRadius: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            Please login first
+          </Typography>
+
+          <Button variant="contained" onClick={onGoLogin}>
+            Go to Login
+          </Button>
+        </Card>
+      </Box>
     );
   }
+
   return (
-    <div>
-      <button onClick={onBackHome}>Back to Home</button>
+    <Box sx={{ minHeight: "100vh", background: "#f1f5f9", paddingY: 4 }}>
+      <Container maxWidth="lg">
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={onBackHome}
+          sx={{ marginBottom: 3 }}
+        >
+          Back to Home
+        </Button>
 
-      <h1>Posts</h1>
+        <Paper
+          elevation={0}
+          sx={{
+            padding: 4,
+            borderRadius: 4,
+            marginBottom: 4,
+            background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)",
+            color: "white",
+          }}
+        >
+          <Typography variant="h3" fontWeight="bold">
+            Posts
+          </Typography>
 
-      <h3>Add new post</h3>
-      <input
-        placeholder="Post title"
-        value={newPostTitle}
-        onChange={(e) => setNewPostTitle(e.target.value)}
-      />
-      <br />
-      <textarea
-        placeholder="Post body"
-        value={newPostBody}
-        onChange={(e) => setNewPostBody(e.target.value)}
-      />
-      <br />
-      <button onClick={onAddPost}>Add Post</button>
+          <Typography variant="h6" sx={{ marginTop: 1 }}>
+            Manage posts and comments easily.
+          </Typography>
+        </Paper>
 
-      <h3>Search posts</h3>
-      <select value={searchBy} onChange={(e) => setSearchBy(e.target.value)}>
-        <option value="id">Search by ID</option>
-        <option value="title">Search by Title</option>
-      </select>
+        <Card sx={{ borderRadius: 4, marginBottom: 3 }}>
+          <CardContent>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Add new post
+            </Typography>
 
-      <input
-        placeholder="Search..."
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-      />
+            <Stack spacing={2}>
+              <TextField
+                label="Post title"
+                fullWidth
+                value={newPostTitle}
+                onChange={(e) => setNewPostTitle(e.target.value)}
+              />
 
-      <h3>Posts list</h3>
+              <TextField
+                label="Post body"
+                multiline
+                rows={4}
+                fullWidth
+                value={newPostBody}
+                onChange={(e) => setNewPostBody(e.target.value)}
+              />
 
-      {posts.length === 0 ? (
-        <p>No posts found.</p>
-      ) : (
-        <ul>
-          {posts.map((post) => (
-            <li
-              key={post.id}
-              style={{
-                border:
-                  selectedPost?.id === post.id ? "2px solid black" : "1px solid gray",
-                padding: "8px",
-                margin: "8px"
-              }}
-            >
-              {editingPostId === post.id ? (
-                <>
-                  <input
-                    value={editingPostTitle}
-                    onChange={(e) => setEditingPostTitle(e.target.value)}
-                  />
-                  <br />
-                  <textarea
-                    value={editingPostBody}
-                    onChange={(e) => setEditingPostBody(e.target.value)}
-                  />
-                  <br />
-                  <button onClick={() => onSaveEditPost(post)}>Save</button>
-                  <button onClick={onCancelEditPost}>Cancel</button>
-                </>
-              ) : (
-                <>
-                  <strong>ID: {post.id}</strong> | {post.title}
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={onAddPost}
+                sx={{
+                  borderRadius: 3,
+                  alignSelf: "flex-start",
+                }}
+              >
+                Add Post
+              </Button>
+            </Stack>
+          </CardContent>
+        </Card>
 
-                  <br />
+        <Card sx={{ borderRadius: 4, marginBottom: 3 }}>
+          <CardContent>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Search posts
+            </Typography>
 
-                  <button onClick={() => onSelectPost(post)}>Select</button>
-                  {post.userId?.toString() === currentUser.id?.toString() && (
-                    <>
-                      <button onClick={() => onStartEditPost(post)}>Edit</button>
-                      <button onClick={() => onDeletePost(post.id)}>Delete</button>
-                    </>
-                  )}
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+              <FormControl fullWidth>
+                <InputLabel>Search by</InputLabel>
 
-      {selectedPost && (
-        <div>
-          <h2>Selected Post</h2>
-          <h3>{selectedPost.title}</h3>
-          <p>{selectedPost.body}</p>
+                <Select
+                  value={searchBy}
+                  label="Search by"
+                  onChange={(e) => setSearchBy(e.target.value)}
+                >
+                  <MenuItem value="id">Search by ID</MenuItem>
+                  <MenuItem value="title">Search by Title</MenuItem>
+                </Select>
+              </FormControl>
 
-          <button onClick={onShowComments}>
-            {comments.length > 0 ? "Hide Comments" : "Show Comments"}
-          </button>
-          <button onClick={onClosePost}>Close Post</button>
+              <TextField
+                label="Search"
+                fullWidth
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+            </Stack>
 
-          <h3>Comments</h3>
+            <FormControlLabel
+  control={
+    <Checkbox
+      checked={showOnlyMyPosts}
+      onChange={(e) => setShowOnlyMyPosts(e.target.checked)}
+    />
+  }
+  label="Show only my posts"
+/>
+          </CardContent>
+        </Card>
 
-          <textarea
-            placeholder="Add comment..."
-            value={newCommentBody}
-            onChange={(e) => setNewCommentBody(e.target.value)}
-          />
-          <br />
-          <button onClick={onAddComment}>Add Comment</button>
-
-          {comments.length === 0 ? (
-            <p>Click "Show Comments" to load comments.</p>
+        <Stack spacing={2}>
+          {posts.length === 0 ? (
+            <Alert severity="info">No posts found.</Alert>
           ) : (
-            <ul>
-              {comments.map((comment) => (
-                <li key={comment.id}>
-                  {editingCommentId === comment.id ? (
-                    <>
-                      <textarea
-                        value={editingCommentBody}
-                        onChange={(e) => setEditingCommentBody(e.target.value)}
+            posts.map((post) => (
+              <Card
+                key={post.id}
+                sx={{
+                  borderRadius: 4,
+                  border:
+                    selectedPost?.id === post.id
+                      ? "2px solid #7c3aed"
+                      : "1px solid #e2e8f0",
+                }}
+              >
+                <CardContent>
+                  {editingPostId === post.id ? (
+                    <Stack spacing={2}>
+                      <TextField
+                        label="Post title"
+                        fullWidth
+                        value={editingPostTitle}
+                        onChange={(e) =>
+                          setEditingPostTitle(e.target.value)
+                        }
                       />
-                      <br />
-                      <button onClick={() => onSaveEditComment(comment)}>
-                        Save
-                      </button>
-                      <button onClick={onCancelEditComment}>Cancel</button>
-                    </>
+
+                      <TextField
+                        label="Post body"
+                        multiline
+                        rows={4}
+                        fullWidth
+                        value={editingPostBody}
+                        onChange={(e) =>
+                          setEditingPostBody(e.target.value)
+                        }
+                      />
+
+                      <Stack direction="row" spacing={1}>
+                        <Button
+                          variant="contained"
+                          startIcon={<SaveIcon />}
+                          onClick={() => onSaveEditPost(post)}
+                        >
+                          Save
+                        </Button>
+
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          startIcon={<CloseIcon />}
+                          onClick={onCancelEditPost}
+                        >
+                          Cancel
+                        </Button>
+                      </Stack>
+                    </Stack>
                   ) : (
                     <>
-                      <p>{comment.body}</p>
-                      <small>
-                        By: {comment.name} | {comment.email}
-                      </small>
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        marginBottom={2}
+                      >
+                        <Chip
+                          label={`ID: ${post.id}`}
+                          color="primary"
+                          size="small"
+                        />
 
-                      {comment.userId === currentUser.id && (
-                        <>
-                          <br />
-                          <button onClick={() => onStartEditComment(comment)}>
-                            Edit Comment
-                          </button>
-                          <button onClick={() => onDeleteComment(comment.id)}>
-                            Delete Comment
-                          </button>
-                        </>
-                      )}
+                        {post.userId?.toString() ===
+                          currentUser.id?.toString() && (
+                          <Box>
+                            <IconButton
+                              color="primary"
+                              onClick={() => onStartEditPost(post)}
+                            >
+                              <EditIcon />
+                            </IconButton>
+
+                            <IconButton
+                              color="error"
+                              onClick={() => onDeletePost(post.id)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        )}
+                      </Stack>
+
+                      <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        gutterBottom
+                      >
+                        {post.title}
+                      </Typography>
+
+                      <Typography color="text.secondary">
+                        {post.body}
+                      </Typography>
+
+                      <Button
+                        variant="contained"
+                        sx={{ marginTop: 3 }}
+                        onClick={() => onSelectPost(post)}
+                      >
+                        Select Post
+                      </Button>
                     </>
                   )}
-                </li>
-              ))}
-            </ul>
+                </CardContent>
+              </Card>
+            ))
           )}
-        </div>
-      )}
-    </div>
+        </Stack>
+
+        {selectedPost && (
+          <Card
+            sx={{
+              borderRadius: 4,
+              marginTop: 5,
+              border: "2px solid #7c3aed",
+            }}
+          >
+            <CardContent>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom={2}
+              >
+                <Typography variant="h5" fontWeight="bold">
+                  Selected Post
+                </Typography>
+
+                <Button
+                  color="error"
+                  variant="outlined"
+                  onClick={onClosePost}
+                >
+                  Close Post
+                </Button>
+              </Stack>
+
+              <Typography variant="h6" gutterBottom>
+                {selectedPost.title}
+              </Typography>
+
+              <Typography color="text.secondary" marginBottom={3}>
+                {selectedPost.body}
+              </Typography>
+
+              <Button
+                variant="contained"
+                startIcon={<CommentIcon />}
+                onClick={onShowComments}
+                sx={{ marginBottom: 3 }}
+              >
+                {comments.length > 0
+                  ? "Hide Comments"
+                  : "Show Comments"}
+              </Button>
+
+              <Divider sx={{ marginBottom: 3 }} />
+
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Add Comment
+              </Typography>
+
+              <Stack spacing={2} marginBottom={4}>
+                <TextField
+                  label="Add comment"
+                  multiline
+                  rows={3}
+                  fullWidth
+                  value={newCommentBody}
+                  onChange={(e) => setNewCommentBody(e.target.value)}
+                />
+
+                <Button
+                  variant="contained"
+                  onClick={onAddComment}
+                  sx={{ alignSelf: "flex-start" }}
+                >
+                  Add Comment
+                </Button>
+              </Stack>
+
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                Comments
+              </Typography>
+
+              {comments.length === 0 ? (
+                <Alert severity="info">
+                  Click "Show Comments" to load comments.
+                </Alert>
+              ) : (
+                <Stack spacing={2}>
+                  {comments.map((comment) => (
+                    <Card
+                      key={comment.id}
+                      sx={{
+                        borderRadius: 3,
+                        background: "#f8fafc",
+                      }}
+                    >
+                      <CardContent>
+                        {editingCommentId === comment.id ? (
+                          <Stack spacing={2}>
+                            <TextField
+                              multiline
+                              rows={3}
+                              fullWidth
+                              value={editingCommentBody}
+                              onChange={(e) =>
+                                setEditingCommentBody(e.target.value)
+                              }
+                            />
+
+                            <Stack direction="row" spacing={1}>
+                              <Button
+                                variant="contained"
+                                onClick={() =>
+                                  onSaveEditComment(comment)
+                                }
+                              >
+                                Save
+                              </Button>
+
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={onCancelEditComment}
+                              >
+                                Cancel
+                              </Button>
+                            </Stack>
+                          </Stack>
+                        ) : (
+                          <>
+                            <Typography marginBottom={2}>
+                              {comment.body}
+                            </Typography>
+
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              By: {comment.name} | {comment.email}
+                            </Typography>
+
+                            {comment.userId === currentUser.id && (
+                              <Box marginTop={2}>
+                                <Button
+                                  size="small"
+                                  startIcon={<EditIcon />}
+                                  onClick={() =>
+                                    onStartEditComment(comment)
+                                  }
+                                >
+                                  Edit
+                                </Button>
+
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  startIcon={<DeleteIcon />}
+                                  onClick={() =>
+                                    onDeleteComment(comment.id)
+                                  }
+                                >
+                                  Delete
+                                </Button>
+                              </Box>
+                            )}
+                          </>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Stack>
+              )}
+            </CardContent>
+          </Card>
+        )}
+      </Container>
+    </Box>
   );
 }

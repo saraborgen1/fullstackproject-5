@@ -1,113 +1,278 @@
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Checkbox,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Chip,
+  Stack,
+  Alert,
+  Paper,
+} from "@mui/material";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
+import CloseIcon from "@mui/icons-material/Close";
+
 export default function TodosView({
-    newTitle,
-    setNewTitle,
-    sortBy,
-    setSortBy,
-    searchBy,
-    setSearchBy,
-    searchValue,
-    setSearchValue,
-    displayedTodos,
-    editingId,
-    editingTitle,
-    setEditingTitle,
-    onAdd,
-    onDelete,
-    onToggle,
-    onStartEdit,
-    onSaveEdit,
-    onCancelEdit,
-    isLoggedIn,
-    onGoLogin,
-    onBackHome
+  newTitle,
+  setNewTitle,
+  sortBy,
+  setSortBy,
+  searchBy,
+  setSearchBy,
+  searchValue,
+  setSearchValue,
+  displayedTodos,
+  editingId,
+  editingTitle,
+  setEditingTitle,
+  onAdd,
+  onDelete,
+  onToggle,
+  onStartEdit,
+  onSaveEdit,
+  onCancelEdit,
+  isLoggedIn,
+  onGoLogin,
+  onBackHome,
 }) {
-    if (!isLoggedIn) {
-        return (
-            <div>
-                <h1>Please login first</h1>
-                <button onClick={onGoLogin}>Go to Login</button>
-            </div>
-        );
-    }
-
+  if (!isLoggedIn) {
     return (
-        <div>
-            <button onClick={onBackHome}>Back to Home</button>
+      <Box
+        sx={{
+          minHeight: "100vh",
+          background: "#0f172a",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 2,
+        }}
+      >
+        <Card sx={{ padding: 4, borderRadius: 4 }}>
+          <Typography variant="h5" gutterBottom>
+            Please login first
+          </Typography>
 
-            <h1>Todos</h1>
+          <Button variant="contained" onClick={onGoLogin}>
+            Go to Login
+          </Button>
+        </Card>
+      </Box>
+    );
+  }
 
-            <h3>Add new todo</h3>
-            <input
-                placeholder="New todo title"
+  return (
+    <Box sx={{ minHeight: "100vh", background: "#f1f5f9", paddingY: 4 }}>
+      <Container maxWidth="lg">
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={onBackHome}
+          sx={{ marginBottom: 3 }}
+        >
+          Back to Home
+        </Button>
+
+        <Paper
+          elevation={0}
+          sx={{
+            padding: 4,
+            borderRadius: 4,
+            marginBottom: 4,
+            background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+            color: "white",
+          }}
+        >
+          <Typography variant="h3" fontWeight="bold">
+            Todos
+          </Typography>
+
+          <Typography variant="h6" sx={{ marginTop: 1 }}>
+            Add, search, sort and manage your tasks.
+          </Typography>
+        </Paper>
+
+        <Card sx={{ borderRadius: 4, marginBottom: 3 }}>
+          <CardContent>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Add new todo
+            </Typography>
+
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+              <TextField
+                label="New todo title"
+                fullWidth
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-            />
-            <button onClick={onAdd}>Add</button>
+              />
 
-            <h3>Sort todos</h3>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="id">Sort by ID</option>
-                <option value="title">Sort by Title</option>
-                <option value="completed">Sort by Completed</option>
-            </select>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={onAdd}
+                sx={{ borderRadius: 3, minWidth: 120 }}
+              >
+                Add
+              </Button>
+            </Stack>
+          </CardContent>
+        </Card>
 
-            <h3>Search todos</h3>
-            <select value={searchBy} onChange={(e) => setSearchBy(e.target.value)}>
-                <option value="id">Search by ID</option>
-                <option value="title">Search by Title</option>
-                <option value="completed">Search by Completed</option>
-            </select>
+        <Card sx={{ borderRadius: 4, marginBottom: 3 }}>
+          <CardContent>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Filters
+            </Typography>
 
-            <input
-                placeholder="Search..."
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+              <FormControl fullWidth>
+                <InputLabel>Sort todos</InputLabel>
+                <Select
+                  value={sortBy}
+                  label="Sort todos"
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <MenuItem value="id">Sort by ID</MenuItem>
+                  <MenuItem value="title">Sort by Title</MenuItem>
+                  <MenuItem value="completed">Sort by Completed</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl fullWidth>
+                <InputLabel>Search by</InputLabel>
+                <Select
+                  value={searchBy}
+                  label="Search by"
+                  onChange={(e) => setSearchBy(e.target.value)}
+                >
+                  <MenuItem value="id">Search by ID</MenuItem>
+                  <MenuItem value="title">Search by Title</MenuItem>
+                  <MenuItem value="completed">Search by Completed</MenuItem>
+                </Select>
+              </FormControl>
+
+              <TextField
+                label="Search"
+                fullWidth
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
-            />
+              />
+            </Stack>
+          </CardContent>
+        </Card>
 
-            <h3>Todos list</h3>
+        <Card sx={{ borderRadius: 4 }}>
+          <CardContent>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Todos list
+            </Typography>
 
             {displayedTodos.length === 0 ? (
-                <p>No todos found.</p>
+              <Alert severity="info">No todos found.</Alert>
             ) : (
-                <ul>
-                    {displayedTodos.map((todo) => (
-                        <li key={todo.id}>
-                            <span>ID: {todo.id} | </span>
+              <List>
+                {displayedTodos.map((todo) => (
+                  <ListItem
+                    key={todo.id}
+                    sx={{
+                      marginBottom: 1.5,
+                      borderRadius: 3,
+                      background: "#ffffff",
+                      border: "1px solid #e2e8f0",
+                    }}
+                    secondaryAction={
+                      editingId === todo.id ? (
+                        <Box>
+                          <IconButton
+                            color="primary"
+                            onClick={() => onSaveEdit(todo)}
+                          >
+                            <SaveIcon />
+                          </IconButton>
 
-                            <input
-                                type="checkbox"
-                                checked={todo.completed}
-                                onChange={() => onToggle(todo)}
+                          <IconButton color="error" onClick={onCancelEdit}>
+                            <CloseIcon />
+                          </IconButton>
+                        </Box>
+                      ) : (
+                        <Box>
+                          <IconButton
+                            color="primary"
+                            onClick={() => onStartEdit(todo)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+
+                          <IconButton
+                            color="error"
+                            onClick={() => onDelete(todo.id)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      )
+                    }
+                  >
+                    <Checkbox
+                      checked={todo.completed}
+                      onChange={() => onToggle(todo)}
+                    />
+
+                    {editingId === todo.id ? (
+                      <TextField
+                        fullWidth
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                      />
+                    ) : (
+                      <ListItemText
+                        primary={
+                          <Typography
+                            sx={{
+                              textDecoration: todo.completed
+                                ? "line-through"
+                                : "none",
+                              fontWeight: 600,
+                            }}
+                          >
+                            {todo.title}
+                          </Typography>
+                        }
+                        secondary={
+                          <Stack direction="row" spacing={1} sx={{ marginTop: 1 }}>
+                            <Chip label={`ID: ${todo.id}`} size="small" />
+                            <Chip
+                              label={
+                                todo.completed ? "Completed" : "Not completed"
+                              }
+                              size="small"
+                              color={todo.completed ? "success" : "default"}
                             />
-
-                            {editingId === todo.id ? (
-                                <>
-                                    <input
-                                        value={editingTitle}
-                                        onChange={(e) => setEditingTitle(e.target.value)}
-                                    />
-                                    <button onClick={() => onSaveEdit(todo)}>Save</button>
-                                    <button onClick={onCancelEdit}>Cancel</button>
-                                </>
-                            ) : (
-                                <>
-                                    <span
-                                        style={{
-                                            textDecoration: todo.completed ? "line-through" : "none",
-                                            marginRight: "10px"
-                                        }}
-                                    >
-                                        {todo.title}
-                                    </span>
-
-                                    <button onClick={() => onStartEdit(todo)}>Edit</button>
-                                    <button onClick={() => onDelete(todo.id)}>Delete</button>
-                                </>
-                            )}
-                        </li>
-                    ))}
-                </ul>
+                          </Stack>
+                        }
+                      />
+                    )}
+                  </ListItem>
+                ))}
+              </List>
             )}
-        </div>
-    );
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
+  );
 }
