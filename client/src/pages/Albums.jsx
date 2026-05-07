@@ -42,18 +42,24 @@ export default function Albums() {
     const { userId, albumId } = useParams();
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (userId && Number(userId) !== currentUser?.id) {
-        navigate("/home");
-        return null;
-    }
-
     const [albumsLoaded, setAlbumsLoaded] = useState(false);
 
     useEffect(() => {
-        if (currentUser) {
-            loadAlbums();
-        }
-    }, []);
+    if (!currentUser) {
+        navigate("/login");
+        return;
+    }
+
+    if (userId && Number(userId) !== Number(currentUser.id)) {
+        navigate("/home");
+    }
+}, [userId, currentUser, navigate]);
+
+useEffect(() => {
+    if (currentUser) {
+        loadAlbums();
+    }
+}, []);
 
     useEffect(() => {
         localStorage.setItem("albumsSearchBy", searchBy);
@@ -78,6 +84,14 @@ export default function Albums() {
             localStorage.setItem("albumsPhotoPage", photoPage);
         }
     }, [photoPage, selectedAlbum]);
+
+    if (!currentUser) {
+    return null;
+}
+
+if (userId && Number(userId) !== Number(currentUser.id)) {
+    return null;
+}
 
     async function loadAlbums() {
         const data = await getAlbumsByUser(currentUser.id);
