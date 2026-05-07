@@ -95,10 +95,10 @@ export default function Posts() {
     let result = [...posts];
 
     if (showOnlyMyPosts) {
-  result = result.filter(
-    (post) => post.userId?.toString() === currentUser.id?.toString()
-  );
-}
+      result = result.filter(
+        (post) => post.userId?.toString() === currentUser.id?.toString()
+      );
+    }
 
     if (searchValue.trim()) {
       result = result.filter((post) => {
@@ -155,6 +155,14 @@ export default function Posts() {
     setSelectedPost(post);
     setComments([]);
     navigate(`/users/${currentUser.id}/posts/${post.id}/comments`);
+    setTimeout(() => {
+      document
+        .getElementById("selected-post-section")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 0);
   }
 
   function handleStartEditPost(post) {
@@ -256,6 +264,10 @@ export default function Posts() {
     setSelectedPost(null);
     setComments([]);
     navigate("/posts");
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 
   return (

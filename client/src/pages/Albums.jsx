@@ -45,21 +45,21 @@ export default function Albums() {
     const [albumsLoaded, setAlbumsLoaded] = useState(false);
 
     useEffect(() => {
-    if (!currentUser) {
-        navigate("/login");
-        return;
-    }
+        if (!currentUser) {
+            navigate("/login");
+            return;
+        }
 
-    if (userId && Number(userId) !== Number(currentUser.id)) {
-        navigate("/home");
-    }
-}, [userId, currentUser, navigate]);
+        if (userId && Number(userId) !== Number(currentUser.id)) {
+            navigate("/home");
+        }
+    }, [userId, currentUser, navigate]);
 
-useEffect(() => {
-    if (currentUser) {
-        loadAlbums();
-    }
-}, []);
+    useEffect(() => {
+        if (currentUser) {
+            loadAlbums();
+        }
+    }, []);
 
     useEffect(() => {
         localStorage.setItem("albumsSearchBy", searchBy);
@@ -86,12 +86,12 @@ useEffect(() => {
     }, [photoPage, selectedAlbum]);
 
     if (!currentUser) {
-    return null;
-}
+        return null;
+    }
 
-if (userId && Number(userId) !== Number(currentUser.id)) {
-    return null;
-}
+    if (userId && Number(userId) !== Number(currentUser.id)) {
+        return null;
+    }
 
     async function loadAlbums() {
         const data = await getAlbumsByUser(currentUser.id);
@@ -155,9 +155,14 @@ if (userId && Number(userId) !== Number(currentUser.id)) {
             setPhotos([]);
             setHasMorePhotos(false);
             navigate("/albums");
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+
             return;
         }
-
         setSelectedAlbum(album);
         navigate(`/users/${currentUser.id}/albums/${album.id}/photos`);
         setPhotos([]);
@@ -177,6 +182,14 @@ if (userId && Number(userId) !== Number(currentUser.id)) {
         setPhotos(allPhotos);
         setPhotoPage(savedPage);
         setHasMorePhotos(allPhotos.length % PHOTO_LIMIT === 0);
+        setTimeout(() => {
+            document
+                .getElementById("selected-album-section")
+                ?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+        }, 0);
     }
 
     async function handleLoadMorePhotos() {
@@ -248,8 +261,6 @@ if (userId && Number(userId) !== Number(currentUser.id)) {
         setEditingPhotoTitle("");
         setEditingPhotoUrl("");
     }
-
-
 
     return (
         <AlbumsView

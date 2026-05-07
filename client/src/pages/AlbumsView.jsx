@@ -34,23 +34,18 @@ export default function AlbumsView({
     setSearchBy,
     searchValue,
     setSearchValue,
-
     newAlbumTitle,
     setNewAlbumTitle,
-
     newPhotoTitle,
     setNewPhotoTitle,
     newPhotoUrl,
     setNewPhotoUrl,
-
     editingPhotoId,
     editingPhotoTitle,
     setEditingPhotoTitle,
     editingPhotoUrl,
     setEditingPhotoUrl,
-
     hasMorePhotos,
-
     onBackHome,
     onSelectAlbum,
     onAddAlbum,
@@ -60,7 +55,6 @@ export default function AlbumsView({
     onStartEditPhoto,
     onSaveEditPhoto,
     onCancelEditPhoto,
-
     isLoggedIn,
     onGoLogin,
 }) {
@@ -118,70 +112,70 @@ export default function AlbumsView({
                     </Typography>
                 </Paper>
 
-<Box
-    sx={{
-        display: "grid",
-        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-        gap: 3,
-        marginBottom: 4,
-    }}
->
-    <Card sx={{ borderRadius: 4 }}>
-        <CardContent>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Add new album
-            </Typography>
-
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                <TextField
-                    label="Album title"
-                    fullWidth
-                    value={newAlbumTitle}
-                    onChange={(e) => setNewAlbumTitle(e.target.value)}
-                />
-
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={onAddAlbum}
-                    sx={{ borderRadius: 3, minWidth: 160 }}
+                <Box
+                    sx={{
+                        display: "grid",
+                        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                        gap: 3,
+                        marginBottom: 4,
+                    }}
                 >
-                    Add Album
-                </Button>
-            </Stack>
-        </CardContent>
-    </Card>
+                    <Card sx={{ borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" fontWeight="bold" gutterBottom>
+                                Add new album
+                            </Typography>
 
-    <Card sx={{ borderRadius: 4 }}>
-        <CardContent>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Search albums
-            </Typography>
+                            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                                <TextField
+                                    label="Album title"
+                                    fullWidth
+                                    value={newAlbumTitle}
+                                    onChange={(e) => setNewAlbumTitle(e.target.value)}
+                                />
 
-            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-                <FormControl fullWidth>
-                    <InputLabel>Search by</InputLabel>
+                                <Button
+                                    variant="contained"
+                                    startIcon={<AddIcon />}
+                                    onClick={onAddAlbum}
+                                    sx={{ borderRadius: 3, minWidth: 160 }}
+                                >
+                                    Add Album
+                                </Button>
+                            </Stack>
+                        </CardContent>
+                    </Card>
 
-                    <Select
-                        value={searchBy}
-                        label="Search by"
-                        onChange={(e) => setSearchBy(e.target.value)}
-                    >
-                        <MenuItem value="id">Search by ID</MenuItem>
-                        <MenuItem value="title">Search by Title</MenuItem>
-                    </Select>
-                </FormControl>
+                    <Card sx={{ borderRadius: 4 }}>
+                        <CardContent>
+                            <Typography variant="h6" fontWeight="bold" gutterBottom>
+                                Search albums
+                            </Typography>
 
-                <TextField
-                    label="Search"
-                    fullWidth
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                />
-            </Stack>
-        </CardContent>
-    </Card>
-</Box>
+                            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Search by</InputLabel>
+
+                                    <Select
+                                        value={searchBy}
+                                        label="Search by"
+                                        onChange={(e) => setSearchBy(e.target.value)}
+                                    >
+                                        <MenuItem value="id">Search by ID</MenuItem>
+                                        <MenuItem value="title">Search by Title</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <TextField
+                                    label="Search"
+                                    fullWidth
+                                    value={searchValue}
+                                    onChange={(e) => setSearchValue(e.target.value)}
+                                />
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                </Box>
 
                 <Typography
                     variant="h5"
@@ -195,14 +189,14 @@ export default function AlbumsView({
                     <Alert severity="info">No albums found.</Alert>
                 ) : (
                     <Box
-  sx={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-    gap: 3,
-  }}
->
-  {albums.map((album) => (
-    <Box key={album.id}>
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                            gap: 3,
+                        }}
+                    >
+                        {albums.map((album) => (
+                            <Box key={album.id}>
                                 <Card
                                     sx={{
                                         borderRadius: 4,
@@ -224,7 +218,7 @@ export default function AlbumsView({
                                     }}
                                     onClick={() => onSelectAlbum(album)}
                                 >
-                
+
                                     <CardContent sx={{ textAlign: "center", padding: 4 }}>
                                         <PhotoAlbumIcon
                                             sx={{
@@ -257,66 +251,69 @@ export default function AlbumsView({
                                         </Typography>
                                     </CardContent>
                                 </Card>
-                               </Box>
-  ))}
-</Box>
+                            </Box>
+                        ))}
+                    </Box>
                 )}
 
                 {selectedAlbum && (
-                    <Box sx={{ marginTop: 6 }}>
-                  <Box
-    sx={{
-        display: "grid",
-        gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
-        gap: 3,
-        marginBottom: 4,
-    }}
->
-    <Card sx={{ borderRadius: 4 }}>
-        <CardContent>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
-                Selected Album
-            </Typography>
+                    <Box
+                        id="selected-album-section"
+                        sx={{ marginTop: 6 }}
+                    >
+                        <Box
+                            sx={{
+                                display: "grid",
+                                gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                                gap: 3,
+                                marginBottom: 4,
+                            }}
+                        >
+                            <Card sx={{ borderRadius: 4 }}>
+                                <CardContent>
+                                    <Typography variant="h4" fontWeight="bold" gutterBottom>
+                                        Selected Album
+                                    </Typography>
 
-            <Typography variant="h6">
-                ID: {selectedAlbum.id} | {selectedAlbum.title}
-            </Typography>
-        </CardContent>
-    </Card>
+                                    <Typography variant="h6">
+                                        ID: {selectedAlbum.id} | {selectedAlbum.title}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
 
-    <Card sx={{ borderRadius: 4 }}>
-        <CardContent>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-                Add new photo
-            </Typography>
+                            <Card sx={{ borderRadius: 4 }}>
+                                <CardContent>
+                                    <Typography variant="h6" fontWeight="bold" gutterBottom>
+                                        Add new photo
+                                    </Typography>
 
-            <Stack spacing={2}>
-                <TextField
-                    label="Photo title"
-                    fullWidth
-                    value={newPhotoTitle}
-                    onChange={(e) => setNewPhotoTitle(e.target.value)}
-                />
+                                    <Stack spacing={2}>
+                                        <TextField
+                                            label="Photo title"
+                                            fullWidth
+                                            value={newPhotoTitle}
+                                            onChange={(e) => setNewPhotoTitle(e.target.value)}
+                                        />
 
-                <TextField
-                    label="Photo URL"
-                    fullWidth
-                    value={newPhotoUrl}
-                    onChange={(e) => setNewPhotoUrl(e.target.value)}
-                />
+                                        <TextField
+                                            label="Photo URL"
+                                            fullWidth
+                                            value={newPhotoUrl}
+                                            onChange={(e) => setNewPhotoUrl(e.target.value)}
+                                        />
 
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={onAddPhoto}
-                    sx={{ alignSelf: "flex-start" }}
-                >
-                    Add Photo
-                </Button>
-            </Stack>
-        </CardContent>
-    </Card>
-</Box>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<AddIcon />}
+                                            onClick={onAddPhoto}
+                                            sx={{ alignSelf: "flex-start" }}
+                                        >
+                                            Add Photo
+                                        </Button>
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                        </Box>
 
                         <Typography
                             variant="h5"
@@ -330,24 +327,24 @@ export default function AlbumsView({
                             <Alert severity="info">No photos loaded.</Alert>
                         ) : (
                             <Box
-  sx={{
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-    gap: 3,
-  }}
->
-  {photos.map((photo) => (
-    <Box key={photo.id}>
+                                sx={{
+                                    display: "grid",
+                                    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+                                    gap: 3,
+                                }}
+                            >
+                                {photos.map((photo) => (
+                                    <Box key={photo.id}>
                                         <Card
-  sx={{
-    borderRadius: 4,
-    overflow: "hidden",
-    height: 260,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  }}
->
+                                            sx={{
+                                                borderRadius: 4,
+                                                overflow: "hidden",
+                                                height: 260,
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
                                             {editingPhotoId === photo.id ? (
                                                 <CardContent>
                                                     <Stack spacing={2}>
@@ -442,9 +439,9 @@ export default function AlbumsView({
                                                 </>
                                             )}
                                         </Card>
-                                        </Box>
-  ))}
-</Box>
+                                    </Box>
+                                ))}
+                            </Box>
                         )}
 
                         {hasMorePhotos && (

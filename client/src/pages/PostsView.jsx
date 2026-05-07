@@ -36,27 +36,22 @@ export default function PostsView({
   setSearchBy,
   searchValue,
   setSearchValue,
-
   showOnlyMyPosts,
   setShowOnlyMyPosts,
-
   newPostTitle,
   setNewPostTitle,
   newPostBody,
   setNewPostBody,
-
   editingPostId,
   editingPostTitle,
   setEditingPostTitle,
   editingPostBody,
   setEditingPostBody,
-
   newCommentBody,
   setNewCommentBody,
   editingCommentId,
   editingCommentBody,
   setEditingCommentBody,
-
   onBackHome,
   onAddPost,
   onDeletePost,
@@ -64,7 +59,6 @@ export default function PostsView({
   onStartEditPost,
   onSaveEditPost,
   onCancelEditPost,
-
   onShowComments,
   onAddComment,
   onDeleteComment,
@@ -72,7 +66,6 @@ export default function PostsView({
   onSaveEditComment,
   onCancelEditComment,
   onClosePost,
-
   isLoggedIn,
   onGoLogin,
   currentUser,
@@ -344,6 +337,7 @@ export default function PostsView({
 
         {selectedPost && (
           <Card
+            id="selected-post-section"
             sx={{
               borderRadius: 4,
               marginTop: 5,
