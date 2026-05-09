@@ -10,7 +10,7 @@ import TodosView from "./TodosView";
 
 export default function Todos() {
   const [todos, setTodos] = useState([]);
-  const [newTitle, setNewTitle] = useState("");
+
 
   const [sortBy, setSortBy] = useState(
     localStorage.getItem("todosSortBy") || "id"
@@ -24,8 +24,17 @@ export default function Todos() {
     localStorage.getItem("todosSearchValue") || ""
   );
 
-  const [editingId, setEditingId] = useState(null);
-  const [editingTitle, setEditingTitle] = useState("");
+  const [newTitle, setNewTitle] = useState(
+    localStorage.getItem("todosNewTitle") || ""
+  );
+
+  const [editingId, setEditingId] = useState(
+    localStorage.getItem("todosEditingId") || null
+  );
+
+  const [editingTitle, setEditingTitle] = useState(
+    localStorage.getItem("todosEditingTitle") || ""
+  );
 
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -55,6 +64,22 @@ export default function Todos() {
     localStorage.setItem("todosSearchValue", searchValue);
   }, [searchValue]);
 
+  useEffect(() => {
+    localStorage.setItem("todosNewTitle", newTitle);
+  }, [newTitle]);
+
+  useEffect(() => {
+    if (editingId) {
+      localStorage.setItem("todosEditingId", editingId);
+    } else {
+      localStorage.removeItem("todosEditingId");
+    }
+  }, [editingId]);
+
+  useEffect(() => {
+    localStorage.setItem("todosEditingTitle", editingTitle);
+  }, [editingTitle]);
+
   async function loadTodos() {
     const data = await getTodosByUser(currentUser.id);
     setTodos(data);
@@ -73,6 +98,7 @@ export default function Todos() {
     const created = await addTodo(newTodo);
     setTodos([...todos, created]);
     setNewTitle("");
+    localStorage.removeItem("todosNewTitle");
   }
 
   async function handleDelete(id) {
@@ -105,11 +131,15 @@ export default function Todos() {
     setTodos(todos.map((t) => (t.id === todo.id ? updated : t)));
     setEditingId(null);
     setEditingTitle("");
+    localStorage.removeItem("todosEditingId");
+    localStorage.removeItem("todosEditingTitle");
   }
 
   function handleCancelEdit() {
     setEditingId(null);
     setEditingTitle("");
+    localStorage.removeItem("todosEditingId");
+    localStorage.removeItem("todosEditingTitle");
   }
 
   function getDisplayedTodos() {

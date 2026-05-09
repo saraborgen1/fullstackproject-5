@@ -26,14 +26,29 @@ export default function Albums() {
         localStorage.getItem("albumsSearchValue") || ""
     );
 
-    const [newAlbumTitle, setNewAlbumTitle] = useState("");
+    const [newAlbumTitle, setNewAlbumTitle] = useState(
+        localStorage.getItem("albumsNewAlbumTitle") || ""
+    );
 
-    const [newPhotoTitle, setNewPhotoTitle] = useState("");
-    const [newPhotoUrl, setNewPhotoUrl] = useState("");
+    const [newPhotoTitle, setNewPhotoTitle] = useState(
+        localStorage.getItem("albumsNewPhotoTitle") || ""
+    );
 
-    const [editingPhotoId, setEditingPhotoId] = useState(null);
-    const [editingPhotoTitle, setEditingPhotoTitle] = useState("");
-    const [editingPhotoUrl, setEditingPhotoUrl] = useState("");
+    const [newPhotoUrl, setNewPhotoUrl] = useState(
+        localStorage.getItem("albumsNewPhotoUrl") || ""
+    );
+
+    const [editingPhotoId, setEditingPhotoId] = useState(
+        localStorage.getItem("albumsEditingPhotoId") || null
+    );
+
+    const [editingPhotoTitle, setEditingPhotoTitle] = useState(
+        localStorage.getItem("albumsEditingPhotoTitle") || ""
+    );
+
+    const [editingPhotoUrl, setEditingPhotoUrl] = useState(
+        localStorage.getItem("albumsEditingPhotoUrl") || ""
+    );
 
     const [photoStart, setPhotoStart] = useState(0);
     const [hasMorePhotos, setHasMorePhotos] = useState(false);
@@ -84,6 +99,34 @@ export default function Albums() {
             localStorage.setItem("albumsPhotoPage", photoPage);
         }
     }, [photoPage, selectedAlbum]);
+
+    useEffect(() => {
+        localStorage.setItem("albumsNewAlbumTitle", newAlbumTitle);
+    }, [newAlbumTitle]);
+
+    useEffect(() => {
+        localStorage.setItem("albumsNewPhotoTitle", newPhotoTitle);
+    }, [newPhotoTitle]);
+
+    useEffect(() => {
+        localStorage.setItem("albumsNewPhotoUrl", newPhotoUrl);
+    }, [newPhotoUrl]);
+
+    useEffect(() => {
+        if (editingPhotoId) {
+            localStorage.setItem("albumsEditingPhotoId", editingPhotoId);
+        } else {
+            localStorage.removeItem("albumsEditingPhotoId");
+        }
+    }, [editingPhotoId]);
+
+    useEffect(() => {
+        localStorage.setItem("albumsEditingPhotoTitle", editingPhotoTitle);
+    }, [editingPhotoTitle]);
+
+    useEffect(() => {
+        localStorage.setItem("albumsEditingPhotoUrl", editingPhotoUrl);
+    }, [editingPhotoUrl]);
 
     if (!currentUser) {
         return null;
@@ -147,6 +190,7 @@ export default function Albums() {
 
         setAlbums([...albums, created]);
         setNewAlbumTitle("");
+        localStorage.removeItem("albumsNewAlbumTitle");
     }
 
     async function handleSelectAlbum(album, fromRefresh = false, savedPage = 1) {
@@ -224,6 +268,8 @@ export default function Albums() {
         setPhotos([...photos, created]);
         setNewPhotoTitle("");
         setNewPhotoUrl("");
+        localStorage.removeItem("albumsNewPhotoTitle");
+        localStorage.removeItem("albumsNewPhotoUrl");
     }
 
     async function handleDeletePhoto(id) {
@@ -254,12 +300,18 @@ export default function Albums() {
         setEditingPhotoId(null);
         setEditingPhotoTitle("");
         setEditingPhotoUrl("");
+        localStorage.removeItem("albumsEditingPhotoId");
+        localStorage.removeItem("albumsEditingPhotoTitle");
+        localStorage.removeItem("albumsEditingPhotoUrl");
     }
 
     function handleCancelEditPhoto() {
         setEditingPhotoId(null);
         setEditingPhotoTitle("");
         setEditingPhotoUrl("");
+        localStorage.removeItem("albumsEditingPhotoId");
+        localStorage.removeItem("albumsEditingPhotoTitle");
+        localStorage.removeItem("albumsEditingPhotoUrl");
     }
 
     return (
@@ -288,6 +340,12 @@ export default function Albums() {
                 localStorage.removeItem("albumsSearchValue");
                 localStorage.removeItem("selectedAlbumId");
                 localStorage.removeItem("albumsPhotoPage");
+                localStorage.removeItem("albumsNewAlbumTitle");
+                localStorage.removeItem("albumsNewPhotoTitle");
+                localStorage.removeItem("albumsNewPhotoUrl");
+                localStorage.removeItem("albumsEditingPhotoId");
+                localStorage.removeItem("albumsEditingPhotoTitle");
+                localStorage.removeItem("albumsEditingPhotoUrl");
                 navigate("/home");
             }}
             onSelectAlbum={handleSelectAlbum}

@@ -25,18 +25,41 @@ export default function Posts() {
     localStorage.getItem("postsSearchValue") || ""
   );
 
-  const [showOnlyMyPosts, setShowOnlyMyPosts] = useState(false);
-  const [newPostTitle, setNewPostTitle] = useState("");
-  const [newPostBody, setNewPostBody] = useState("");
+  const [showOnlyMyPosts, setShowOnlyMyPosts] = useState(
+    localStorage.getItem("postsShowOnlyMyPosts") === "true"
+  );
 
-  const [editingPostId, setEditingPostId] = useState(null);
-  const [editingPostTitle, setEditingPostTitle] = useState("");
-  const [editingPostBody, setEditingPostBody] = useState("");
+  const [newPostTitle, setNewPostTitle] = useState(
+    localStorage.getItem("postsNewPostTitle") || ""
+  );
 
-  const [newCommentBody, setNewCommentBody] = useState("");
+  const [newPostBody, setNewPostBody] = useState(
+    localStorage.getItem("postsNewPostBody") || ""
+  );
 
-  const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editingCommentBody, setEditingCommentBody] = useState("");
+  const [editingPostId, setEditingPostId] = useState(
+    localStorage.getItem("postsEditingPostId") || null
+  );
+
+  const [editingPostTitle, setEditingPostTitle] = useState(
+    localStorage.getItem("postsEditingPostTitle") || ""
+  );
+
+  const [editingPostBody, setEditingPostBody] = useState(
+    localStorage.getItem("postsEditingPostBody") || ""
+  );
+
+  const [newCommentBody, setNewCommentBody] = useState(
+    localStorage.getItem("postsNewCommentBody") || ""
+  );
+
+  const [editingCommentId, setEditingCommentId] = useState(
+    localStorage.getItem("postsEditingCommentId") || null
+  );
+
+  const [editingCommentBody, setEditingCommentBody] = useState(
+    localStorage.getItem("postsEditingCommentBody") || ""
+  );
 
   const [postsLoaded, setPostsLoaded] = useState(false);
 
@@ -72,6 +95,50 @@ export default function Posts() {
       localStorage.removeItem("selectedPostId");
     }
   }, [selectedPost, postsLoaded]);
+
+  useEffect(() => {
+    localStorage.setItem("postsShowOnlyMyPosts", showOnlyMyPosts);
+  }, [showOnlyMyPosts]);
+
+  useEffect(() => {
+    localStorage.setItem("postsNewPostTitle", newPostTitle);
+  }, [newPostTitle]);
+
+  useEffect(() => {
+    localStorage.setItem("postsNewPostBody", newPostBody);
+  }, [newPostBody]);
+
+  useEffect(() => {
+    if (editingPostId) {
+      localStorage.setItem("postsEditingPostId", editingPostId);
+    } else {
+      localStorage.removeItem("postsEditingPostId");
+    }
+  }, [editingPostId]);
+
+  useEffect(() => {
+    localStorage.setItem("postsEditingPostTitle", editingPostTitle);
+  }, [editingPostTitle]);
+
+  useEffect(() => {
+    localStorage.setItem("postsEditingPostBody", editingPostBody);
+  }, [editingPostBody]);
+
+  useEffect(() => {
+    localStorage.setItem("postsNewCommentBody", newCommentBody);
+  }, [newCommentBody]);
+
+  useEffect(() => {
+    if (editingCommentId) {
+      localStorage.setItem("postsEditingCommentId", editingCommentId);
+    } else {
+      localStorage.removeItem("postsEditingCommentId");
+    }
+  }, [editingCommentId]);
+
+  useEffect(() => {
+    localStorage.setItem("postsEditingCommentBody", editingCommentBody);
+  }, [editingCommentBody]);
 
   async function loadPosts() {
     const data = await getAllPosts();
@@ -138,6 +205,8 @@ export default function Posts() {
 
     setNewPostTitle("");
     setNewPostBody("");
+    localStorage.removeItem("postsNewPostTitle");
+    localStorage.removeItem("postsNewPostBody");
   }
 
   async function handleDeletePost(id) {
@@ -191,12 +260,18 @@ export default function Posts() {
     setEditingPostId(null);
     setEditingPostTitle("");
     setEditingPostBody("");
+    localStorage.removeItem("postsEditingPostId");
+    localStorage.removeItem("postsEditingPostTitle");
+    localStorage.removeItem("postsEditingPostBody");
   }
 
   function handleCancelEditPost() {
     setEditingPostId(null);
     setEditingPostTitle("");
     setEditingPostBody("");
+    localStorage.removeItem("postsEditingPostId");
+    localStorage.removeItem("postsEditingPostTitle");
+    localStorage.removeItem("postsEditingPostBody");
   }
 
   async function handleToggleComments() {
@@ -227,6 +302,7 @@ export default function Posts() {
 
     setComments([...comments, created]);
     setNewCommentBody("");
+    localStorage.removeItem("postsNewCommentBody");
   }
 
   async function handleDeleteComment(id) {
@@ -253,11 +329,15 @@ export default function Posts() {
 
     setEditingCommentId(null);
     setEditingCommentBody("");
+    localStorage.removeItem("postsEditingCommentId");
+    localStorage.removeItem("postsEditingCommentBody");
   }
 
   function handleCancelEditComment() {
     setEditingCommentId(null);
     setEditingCommentBody("");
+    localStorage.removeItem("postsEditingCommentId");
+    localStorage.removeItem("postsEditingCommentBody");
   }
 
   function handleClosePost() {
@@ -299,6 +379,15 @@ export default function Posts() {
         localStorage.removeItem("postsSearchBy");
         localStorage.removeItem("postsSearchValue");
         localStorage.removeItem("selectedPostId");
+        localStorage.removeItem("postsShowOnlyMyPosts");
+        localStorage.removeItem("postsNewPostTitle");
+        localStorage.removeItem("postsNewPostBody");
+        localStorage.removeItem("postsEditingPostId");
+        localStorage.removeItem("postsEditingPostTitle");
+        localStorage.removeItem("postsEditingPostBody");
+        localStorage.removeItem("postsNewCommentBody");
+        localStorage.removeItem("postsEditingCommentId");
+        localStorage.removeItem("postsEditingCommentBody");
         navigate("/home");
       }}
       onAddPost={handleAddPost}
