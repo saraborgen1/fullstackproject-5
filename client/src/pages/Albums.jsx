@@ -65,7 +65,7 @@ export default function Albums() {
             return;
         }
 
-        if (userId && Number(userId) !== Number(currentUser.id)) {
+        if (userId && userId.toString() !== currentUser.id?.toString()) {
             navigate("/home");
         }
     }, [userId, currentUser, navigate]);
@@ -132,7 +132,7 @@ export default function Albums() {
         return null;
     }
 
-    if (userId && Number(userId) !== Number(currentUser.id)) {
+    if (userId && userId.toString() !== currentUser.id?.toString()) {
         return null;
     }
 
